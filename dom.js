@@ -1,21 +1,24 @@
-function eachElement(element, obj = {}, j = 0, elementName = element.nodeName) {
-
-    if (obj[elementName]) {
-        obj[element.nodeName + '-' + j] = {};
-        elementName = element.nodeName + '-' + j;
-        j++;
-    } else {
-        obj[element.nodeName] = {};
-        elementName = element.nodeName;
-    }
-    // Recursive case:
-    if (element.children.length) {
-        for(let i = 0; i < element.children.length; i++) {
-            eachElement(element.children[i], obj[elementName]);
+(function(counter = 1) {
+    function eachElement(element, obj = {}, elementName = element.nodeName) {
+        if (obj[elementName]) {
+            obj[element.nodeName + '-' + counter] = {};
+            elementName = element.nodeName + '-' + counter;
+            counter++;
+        } else {
+            obj[element.nodeName] = {};
+            elementName = element.nodeName;
         }
-    } else {
-    // Base Case:
-        return;
+        // Recursive case:
+        if (element.children.length) {
+            for(let i = 0; i < element.children.length; i++) {
+                eachElement(element.children[i], obj[elementName]);
+            }
+        } else { // Base Case:
+            obj[elementName] = element.textContent;
+            return;
+        }
+        return obj;
     }
-    return obj;
-}
+
+    window.eachElement = eachElement;
+})()
